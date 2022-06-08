@@ -37,6 +37,11 @@ class Container {
     }
   }
 
+  getAll() {
+    console.log(this.fileContent);
+    return this.fileContent;
+  }
+
   getById(id) {
     const element = this.fileContent.find((item) => {
       return item.id === id;
@@ -49,9 +54,11 @@ class Container {
     }
   }
 
-  getAll() {
-    console.log(this.fileContent);
-    return this.fileContent;
+  getRandomProduct() {
+    const randomIndex = Math.floor(Math.random() * this.fileContent.length);
+    const randomProduct = this.fileContent[randomIndex];
+    console.log(randomIndex);
+    return randomProduct;
   }
 
   async deleteById(id) {
@@ -83,19 +90,4 @@ class Container {
   }
 }
 
-new Container("productos.txt").then(async (cont) => {
-  let container = cont;
-  await container.save({
-    title: "La chica a la orilla del mar (tomo único)",
-    price: 1000
-  });
-  await container.save({ title: "One Piece tomo 222562156", price: 700 });
-  await container.save({ title: "Figura de acción Miku Hatsune", price: 6500 });
-
-  container.getById(1);
-  container.getAll();
-  await container.deleteById(2);
-  container.getAll();
-  await container.deleteAll();
-  container.getAll();
-});
+module.exports = Container;
