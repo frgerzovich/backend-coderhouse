@@ -11,20 +11,20 @@ class Api {
   }
 
   getProduct(id) {
-    const product = this.products.filter((product) => product.id === id);
     if (isNaN(id)) {
-      res.status(400).json({
-        error: "El id debe ser un número",
-      });
-      return;
+      const error = new Error("El id debe ser un número");
+      error.statusCode = 400;
+      throw error;
     }
 
-    if (!product.length) {
-      res.status(404).json({
-        error: "Producto no encontrado",
-      });
-      return;
+    const product = this.products.find((product) => product.id === id);
+
+    if (!product) {
+      const error = new Error("El producto no existe");
+      error.statusCode = 404;
+      throw error;
     }
+    return product;
   }
 
   postProduct(name, price, thumbnail) {
@@ -33,6 +33,18 @@ class Api {
   }
 
   editProduct(id, name, price, thumbnail) {
+    if (isNaN(id)) {
+      const error = new Error("El id debe ser un número");
+      error.statusCode = 400;
+      throw error;
+    }
+    const product = this.products.find((product) => product.id === id);
+
+    if (!product) {
+      const error = new Error("El producto no existe");
+      error.statusCode = 404;
+      throw error;
+    }
     const editedProducts = this.products.map((product) => {
       if (product.id === id) {
         return {
@@ -44,17 +56,26 @@ class Api {
       }
       return product;
     });
+
     this.products = editedProducts;
   }
 
   deleteProduct(id) {
     if (isNaN(id)) {
-      return res.status(400).json({
-        error: "El id debe ser un número",
-      });
+      const error = new Error("El id debe ser un número");
+      error.statusCode = 400;
+      throw error;
     }
 
+    const product = this.products.find((product) => product.id === id);
+
+    if (!product) {
+      const error = new Error("El producto no existe");
+      error.statusCode = 404;
+      throw error;
+    }
     const editedProducts = this.products.filter((product) => product.id !== id);
+
     this.products = editedProducts;
   }
 }
