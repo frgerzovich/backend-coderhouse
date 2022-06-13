@@ -1,12 +1,13 @@
 const express = require("express");
-const multer = require("multer");
-const app = express();
 const routes = require("./src/routes/index");
+
+const app = express();
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static("public"));
+app.use("/imagenes", express.static("public/images"));
 
 app.use("/api", routes);
 

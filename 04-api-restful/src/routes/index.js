@@ -1,6 +1,17 @@
 const { Router } = require("express");
 const router = Router();
 const Api = require("../api");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
 
 const api = new Api();
 
@@ -20,8 +31,9 @@ router.get("/productos/:id", (req, res, next) => {
   }
 });
 
-router.post("/productos", (req, res, next) => {
-  const { name, price, thumbnail } = req.body;
+router.post("/productos", upload.single("thumbnail"), (req, res, next) => {
+  const { name, price } = req.body;
+  const thumbnail = req.file;
   api.postProduct(name, price, thumbnail);
   res.sendStatus(201);
 });
