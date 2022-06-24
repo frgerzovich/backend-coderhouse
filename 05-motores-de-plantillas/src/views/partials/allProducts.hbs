@@ -1,0 +1,16 @@
+<h2>Productos:</h2>
+{{#if listExists}}
+  <ul>
+    {{#each products}}
+      <li>Nombre: {{this.name}}</li>
+        <li>Precio: {{this.price}}</li>
+        <li>Foto: <img src={{this.thumbnail}} alt="No se encuentra la imágen"></img></li>
+        <br>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No hay productos cargados</p>
+{{/if}}
+<form action="/productos/nuevo" method="get">
+    <input type="submit" value="Crear Producto">
+</form>

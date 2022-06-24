@@ -1,0 +1,15 @@
+<%if(listExists) { %>
+    <% products.forEach(product) => { %>
+        <ul> 
+            <li>Nombre: <%= product.name %></li>
+            <li>Precio: $<%= product.price %></li>
+            <li> Imágen: <img alt="No se encuentra la imágen" src="<%=producto.thumbnail%>"/></li>
+        </ul>
+    <% }) %> 
+    </table>
+<% } else { %>
+    <p>No hay productos cargados</p>
+<% } %> 
+<form action="/productos/nuevo" method="get">
+    <input type="submit" value="Crear Producto">
+</form>

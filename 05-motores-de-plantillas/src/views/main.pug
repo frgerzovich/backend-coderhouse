@@ -1,0 +1,14 @@
+if listExists
+            ul 
+                each product in products
+                    li= `Nombre: ${product.name}`
+                    li= `Precio: $ ${product.price}`
+                    li= `Imágen: `
+                    img(src= product.thumbnail alt="No se encuentra la imágen")
+                
+               
+else
+    p No hay productos cargados
+
+form.formRoute(action="/productos/nuevo", method="get")
+                button Crear Productos

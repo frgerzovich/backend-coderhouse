@@ -1,0 +1,11 @@
+form(method="post", action="/api/productos")
+                label Nombre: 
+                    input(type="text", name="name")
+                label Precio: 
+                    input(type="number", name="price")
+                label Thumbnail:
+                    input(type="text", name="thumbnail")
+                    input(type="submit", value="Enviar")
+
+form.formRoute2(action="/productos", method="get")
+                button Ver todos los productos
