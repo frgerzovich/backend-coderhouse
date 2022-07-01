@@ -42,7 +42,7 @@ const renderProducts = (products) => {
           <tr>
             <th>{{this.title}}</th>
             <td>{{this.price}}</td>
-            <td class="align-middle"><img  src={{this.thumbnail}}/></td>
+            <td ><img  src={{this.thumbnail}}/></td>
           </tr>
         {{/each}}
       </tbody>
@@ -62,37 +62,36 @@ socket.on("products", (products) => {
 //mensajes
 
 const renderMessages = (messages) => {
-    const chatHtml = `
+  const chatHtml = `
     {{#each messages}}
           <div>
-            <span class="fw-bold text-primary">{{this.email}} </span>[<span class="text-danger">{{this.time}}</span>]: <span class="fst-italic">{{this.content}}</span>
+            <span style = "color:green">{{this.email}} </span>[<span style="color:red">{{this.time}}</span>]: <span>{{this.content}}</span>
           </div>
     {{/each}}
     `;
-    const template = Handlebars.compile(chatHtml);
-    const html = template({ messages });
-    document.getElementById("chat-container").innerHTML = html;
+  const template = Handlebars.compile(chatHtml);
+  const html = template({ messages });
+  document.getElementById("chat-container").innerHTML = html;
+};
+
+socket.on("messages", (messages) => {
+  renderMessages(messages);
+});
+
+document.getElementById("message-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("message-email").value;
+  const content = document.getElementById("message-content");
+  const time = new Date().toLocaleString();
+
+  const newMessage = {
+    email,
+    content: content.value,
+    time,
   };
-  
-  socket.on("messages", (messages) => {
-    renderMessages(messages);
-  });
-  
-  document.getElementById("message-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-  
-    const email = document.getElementById("message-email").value;
-    const content = document.getElementById("message-content");
-    const time = new Date().toLocaleString();
-  
-    const newMessage = {
-      email,
-      content: content.value,
-      time
-    };
-  
-    socket.emit("new-message", newMessage);
-  
-    content.value = "";
-  });
-  
+
+  socket.emit("new-message", newMessage);
+
+  content.value = "";
+});

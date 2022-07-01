@@ -43,7 +43,7 @@ ioServer.on("connection", (socket) => {
 
   socket.emit("products", products);
 
-  socket.on("new-product", (product) => {
+   socket.on("new-product", (product) => {
     console.log(products);
     productsApi.createProduct(product);
     const updatedProducts = productsApi.getAllProducts();
@@ -57,7 +57,7 @@ ioServer.on("connection", (socket) => {
   socket.on("new-message", async (message) => {
     await messagesApi.send(message);
     const updatedMessages = await messagesApi.getAll();
-    io.sockets.emit("messages", updatedMessages);
+    ioServer.sockets.emit("messages", updatedMessages);
   });
 });
 
