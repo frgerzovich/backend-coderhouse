@@ -36,14 +36,14 @@ app.use(express.static("public"));
 app.set("view engine", /* alternate between pug hbs and ejs */ "hbs");
 app.set("views", "./src/views");
 
-ioServer.on("connection", (socket) => {
+ioServer.on("connection", async (socket) => {
   console.log("a user connected");
 
   //mandar productos apenas se conecta el usuario:
 
   socket.emit("products", products);
 
-   socket.on("new-product", (product) => {
+  socket.on("new-product", (product) => {
     console.log(products);
     productsApi.createProduct(product);
     const updatedProducts = productsApi.getAllProducts();
@@ -52,6 +52,7 @@ ioServer.on("connection", (socket) => {
 
   //mostrar Mensajes
   const messages = await messagesApi.getAll();
+  console.log(messages);
   socket.emit("messages", messages);
 
   socket.on("new-message", async (message) => {
