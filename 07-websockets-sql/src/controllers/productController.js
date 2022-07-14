@@ -2,7 +2,6 @@ const Api = require("../productsApi");
 const db = require("../db/database").mysqlConnection;
 
 const api = new Api(db, "products");
-
 const getAll = async (req, res) => {
   try {
     const products = await api.getAllProducts();

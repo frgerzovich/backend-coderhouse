@@ -6,7 +6,7 @@ class MessagesApi {
 
   async send(message) {
     try {
-      await this.database(this.table).insert(message);
+      await this.db(this.table).insert(message);
       return message;
     } catch (error) {
       throw new Error(
@@ -17,12 +17,17 @@ class MessagesApi {
 
   async getAll() {
     try {
-      const messages = await this.database.from(this.table).select("*");
+      const messages = await this.db.from(this.table).select("*");
       return messages;
     } catch (error) {
-      throw new Error(
-        "Ha ocurrido un error obteniendo los datos: " + error.message
-      );
+      if (error.errno === 1) {
+        const createTable = require("./db/chat/create_chats_table");
+        await createTable();
+      } else {
+        throw new Error(
+          "Ha ocurrido un error obteniendo los datos: " + error.message
+        );
+      }
     }
   }
 }

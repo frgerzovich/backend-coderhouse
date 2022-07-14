@@ -6,13 +6,12 @@ class Api {
 
   async getAllProducts() {
     try {
-      const products = await this.database.from(this.table).select("*");
+      const products = await this.db.from(this.table).select("*");
       return products;
     } catch (error) {
       if (error.code === "ER_NO_SUCH_TABLE") {
         const createTable = require("./db/products/create_products_table");
         await createTable();
-        console.log("Tabla de productos creada exitosamente");
       } else {
         throw new Error(
           "Ha ocurrido un error obteniendo los datos: " + error.message
@@ -23,7 +22,7 @@ class Api {
 
   async getProduct(id) {
     try {
-      const product = await this.database.from(this.table).where({ id });
+      const product = await this.db.from(this.table).where({ id });
       if (!product) {
         const error = new Error("El producto no existe");
         error.statusCode = 404;
@@ -38,7 +37,7 @@ class Api {
   }
   async createProduct(product) {
     try {
-      const id = await this.database(this.table).insert(product);
+      const id = await this.db(this.table).insert(product);
       product.id = id[0];
       return product;
     } catch (error) {
@@ -50,7 +49,7 @@ class Api {
 
   async editProduct(id, product) {
     try {
-      const idToEdit = await this.database
+      const idToEdit = await this.db
         .from(this.table)
         .where("id", "=", id)
         .update(product);
@@ -69,7 +68,7 @@ class Api {
 
   async deleteProduct(id) {
     try {
-      const idToDelete = await this.database
+      const idToDelete = await this.db
         .from(this.table)
         .where("id", "=", id)
         .del();
@@ -87,4 +86,4 @@ class Api {
   }
 }
 
-module.exports = new Api();
+module.exports = Api;

@@ -6,12 +6,14 @@ const { Server: IOServer } = require("socket.io");
 const ProductsApi = require("./src/productsApi");
 const MessagesApi = require("./src/messagesApi");
 const messagesDB = require("./src/db/database").sqliteConnection;
+const productsDB = require("./src/db/database").mysqlConnection;
 
 const app = express();
 const port = 8080;
 const httpServer = new HttpServer(app);
 const ioServer = new IOServer(httpServer);
-const products = ProductsApi.getAllProducts();
+const productsApi = new ProductsApi(productsDB, "products");
+const products = productsApi.getAllProducts();
 const messagesApi = new MessagesApi(messagesDB, "chats");
 
 //handlebars config
@@ -46,14 +48,13 @@ ioServer.on("connection", async (socket) => {
 
   socket.on("new-product", (product) => {
     console.log(products);
-    ProductsApi.createProduct(product);
-    const updatedProducts = ProductsApi.getAllProducts();
+    productsApi.createProduct(product);
+    const updatedProducts = productsApi.getAllProducts();
     ioServer.sockets.emit("products", updatedProducts);
   });
 
   //mostrar Mensajes
   const messages = await messagesApi.getAll();
-  console.log(messages);
   socket.emit("messages", messages);
 
   socket.on("new-message", async (message) => {

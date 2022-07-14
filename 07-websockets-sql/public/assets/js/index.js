@@ -5,28 +5,34 @@ const socket = io();
 document.getElementById("products-form").addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const productTitle = document.getElementById("product-title");
-  const productPrice = document.getElementById("product-price");
-  const productImage = document.getElementById("product-image");
+  const title = document.getElementById("product-title").value;
+  const price = document.getElementById("product-price").value;
+  const thumbnail = document.getElementById("product-image").value;
+  const stock = document.getElementById("product-stock").value;
+  const description = document.getElementById("product-description").value;
 
   const newProduct = {
-    title: productTitle.value,
-    price: productPrice.value,
-    thumbnail: productImage.value,
+    title: title,
+    price: price,
+    thumbnail: thumbnail,
+    stock: stock,
+    description: description,
   };
 
   socket.emit("new-product", newProduct);
 
-  productTitle.value = "";
-  productPrice.value = "";
-  productImage.value = "";
+  title = "";
+  price = "";
+  thumbnail = "";
+  stock = "";
+  description = "";
 });
 
 //vista de Productos
 
 const renderProducts = (products) => {
   let hayProductos = true;
-  if (!products[0]) hayProductos = false;
+  if (products.length === 0) hayProductos = false;
   const productsHtml = `
     {{#if hayProductos}}
     <table>
@@ -34,7 +40,9 @@ const renderProducts = (products) => {
         <tr>
           <th >Nombre</th>
           <th >Precio</th>
+          <th >Descripción</th>
           <th >Imagen</th>
+          <th >Stock</th>
         </tr>
       </thead>
       <tbody>
@@ -42,7 +50,9 @@ const renderProducts = (products) => {
           <tr>
             <th>{{this.title}}</th>
             <td>{{this.price}}</td>
+            <td>{{this.description}}</td>
             <td ><img  src={{this.thumbnail}}/></td>
+            <td>{{this.stock}}</td>
           </tr>
         {{/each}}
       </tbody>
@@ -65,7 +75,7 @@ const renderMessages = (messages) => {
   const chatHtml = `
     {{#each messages}}
           <div>
-            <span style = "color:green">{{this.email}} </span>[<span style="color:red">{{this.time}}</span>]: <span>{{this.content}}</span>
+            <span style = "color:green">{{this.email}} </span>[<span style="color:red">{{this.time}}</span>]: <span>{{this.message}}</span>
           </div>
     {{/each}}
     `;
@@ -82,16 +92,16 @@ document.getElementById("message-form").addEventListener("submit", (e) => {
   e.preventDefault();
 
   const email = document.getElementById("message-email").value;
-  const content = document.getElementById("message-content");
+  const message = document.getElementById("message-content").value;
   const time = new Date().toLocaleString();
 
   const newMessage = {
     email,
-    content: content.value,
+    message,
     time,
   };
 
   socket.emit("new-message", newMessage);
 
-  content.value = "";
+  message.value = "";
 });

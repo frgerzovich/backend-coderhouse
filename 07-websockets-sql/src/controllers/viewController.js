@@ -1,4 +1,7 @@
-const api = require("../productsApi");
+const Api = require("../productsApi");
+const db = require("../db/database").mysqlConnection;
+
+const api = new Api(db, "products");
 
 const viewAll = async (req, res) => {
   try {
