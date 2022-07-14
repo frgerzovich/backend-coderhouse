@@ -32,7 +32,7 @@ document.getElementById("products-form").addEventListener("submit", (e) => {
 
 const renderProducts = (products) => {
   let hayProductos = true;
-  if (products.length === 0) hayProductos = false;
+  if (!products[0]) hayProductos = false;
   const productsHtml = `
     {{#if hayProductos}}
     <table>
