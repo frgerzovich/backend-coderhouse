@@ -7,10 +7,19 @@
     <title>Desafío 4 Coderhouse</title>
   </head>
   <body>
-    <form action="/api/productos" enctype="multipart/form-data" method="post">
-      Nombre del producto: <input type="text" name="name" /> Precio:
-      <input type="number" name="price" /> Imágen:
-      <input type="file" name="thumbnail" />
+    <form action="/api/productos" style="display: flex" enctype="multipart/form-data" method="post">
+      <div>
+        <label>Nombre del producto</label>
+        <input type="text" name="name" />
+      </div>
+      <div>
+        <label> Precio:</label>
+        <input type="number" name="price" />
+      </div>
+      <div>
+        <label> Imágen: </label>
+        <input type="file" name="thumbnail" />
+      </div>
       <input type="submit" value="Enviar" />
     </form>
     <form action="/api/productos" method="get">

@@ -15,7 +15,6 @@ const port = 8080;
 const httpServer = new HttpServer(app);
 const ioServer = new IOServer(httpServer);
 const productsApi = new ProductsApi(productsDB, "products");
-const products = productsApi.getAllProducts();
 
 const messagesApi = new MessagesApi("chats", {
   author: {
@@ -25,9 +24,9 @@ const messagesApi = new MessagesApi("chats", {
     lastname: { type: String, required: true },
     age: { type: Number, required: true },
     alias: { type: String, required: true },
-    avatar: { type: String, required: true },
+    avatar: { type: String, required: true }
   },
-  text: { type: String, required: true },
+  text: { type: String, required: true }
 });
 
 //conexion con mongo
@@ -36,10 +35,12 @@ async function mongoConnection() {
   const URL = "mongodb://localhost:27017/websocketsmongo";
   await mongoose.connect(URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   });
   console.log("mongodb connection established");
 }
+
+mongoConnection();
 
 //handlebars config
 app.engine(
@@ -48,14 +49,14 @@ app.engine(
     extname: "hbs",
     defaultLayout: "index.hbs",
     layoutsDir: __dirname + "/src/views/layouts",
-    partialsDir: __dirname + "/src/views/partials",
+    partialsDir: __dirname + "/src/views/partials"
   })
 );
 
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: true,
+    extended: true
   })
 );
 app.use("/", router);
@@ -68,12 +69,12 @@ ioServer.on("connection", async (socket) => {
   console.log("a user connected");
 
   //mandar productos apenas se conecta el usuario:
-
+  const products = await productsApi.getAllProducts();
   socket.emit("products", products);
 
-  socket.on("new-product", (product) => {
-    productsApi.createProduct(product);
-    const updatedProducts = productsApi.getAllProducts();
+  socket.on("new-product", async (product) => {
+    await productsApi.createProduct(product);
+    const updatedProducts = await productsApi.getAllProducts();
     ioServer.sockets.emit("products", updatedProducts);
   });
 
@@ -85,7 +86,8 @@ ioServer.on("connection", async (socket) => {
   socket.on("new-message", async (message) => {
     await messagesApi.send(message);
     const updatedMessages = await messagesApi.getAll();
-    ioServer.sockets.emit("messages", updatedMessages);
+    const normalizedMessages = normalizeMessages(updatedMessages);
+    ioServer.sockets.emit("messages", normalizedMessages);
   });
 });
 

@@ -6,15 +6,12 @@ const api = new Api(db, "products");
 const viewAll = async (req, res) => {
   try {
     const products = await api.getAllProducts();
-    console.log(products[0]);
     res.render("main", {
       products: products,
-      listExists: products.length > 0,
+      listExists: products.length > 0
     });
   } catch (error) {
-    res
-      .status(error.statusCode ? error.statusCode : 500)
-      .json({ error: error.message });
+    res.status(error.statusCode ? error.statusCode : 500).json({ error: error.message });
   }
 };
 

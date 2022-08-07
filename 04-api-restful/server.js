@@ -11,11 +11,6 @@ app.use("/imagenes", express.static("public/images"));
 
 app.use("/api", routes);
 
-app.use((error, req, res, next) => {
-  console.log(error);
-  res.sendStatus(500);
-});
-
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
