@@ -16,16 +16,16 @@ document.getElementById("products-form").addEventListener("submit", (e) => {
     price: price,
     thumbnail: thumbnail,
     stock: stock,
-    description: description
+    description: description,
   };
 
   socket.emit("new-product", newProduct);
 
-  title = "";
+  /*  title = "";
   price = "";
   thumbnail = "";
   stock = "";
-  description = "";
+  description = ""; */
 });
 
 //vista de Productos
@@ -71,21 +71,22 @@ socket.on("products", (products) => {
 
 //mensajes
 
-const renderMessages = (messages) => {
+const renderMessages = (objMessages) => {
   const chatHtml = `
-    {{#each messages}}
+    {{#each objMessages}}
           <div>
-            <span style = "color:green">{{this.email}} </span>[<span style="color:red">{{this.time}}</span>]: <span>{{this.message}}</span>
+            <span style = "color:green">{{this.author.id}} </span>[<span style="color:red">{{this.time}}</span>]: <span>{{this.text}}</span>
           </div>
     {{/each}}
     `;
   const template = Handlebars.compile(chatHtml);
-  const html = template({ messages });
+  const html = template({ objMessages });
   document.getElementById("chat-container").innerHTML = html;
 };
 
 socket.on("messages", (messages) => {
-  const { denormalizedMessages, optimizationPercentage } = denormalizeMensajes(messages);
+  const { denormalizedMessages, optimizationPercentage } =
+    denormalizeMensajes(messages);
   renderMessages(denormalizedMessages);
   renderOptimization(optimizationPercentage);
 });
@@ -101,14 +102,15 @@ document.getElementById("message-form").addEventListener("submit", (e) => {
     author: {
       id: email,
       email: email,
-      time: time,
+
       name: "nombreDefault",
       lastname: "apellidoDefault",
       age: 99,
       alias: "aliasDefault",
-      avatar: "avatarDefault"
+      avatar: "avatarDefault",
     },
-    text: message
+    text: message,
+    time: time,
   };
 
   console.log("funca", newMessage);
@@ -121,24 +123,41 @@ document.getElementById("message-form").addEventListener("submit", (e) => {
 function denormalizeMensajes(objMessages) {
   const author = new normalizr.schema.Entity("author");
 
-  const message = new normalizr.schema.Entity("message", { author: author }, { idAttribute: "_id" });
+  const message = new normalizr.schema.Entity(
+    "message",
+    { author: author },
+    { idAttribute: "_id" }
+  );
 
   const schemaMessages = new normalizr.schema.Entity("messages", {
-    objMessages: [message]
+    objMessages: [message],
   });
 
-  const denormalized = normalizr.denormalize(objMessages.result, schemaMessages, objMessages.entities);
+  const denormalizedMessages = normalizr.denormalize(
+    objMessages.result,
+    schemaMessages,
+    objMessages.entities
+  );
 
   const normalizedLength = JSON.stringify(objMessages).length;
-  const denormalizedLenght = JSON.stringify(denormalized).length;
-  const optimizationPercentage = (100 - (normalizedLength * 100) / denormalizedLenght).toFixed(2);
+  const denormalizedLenght = JSON.stringify(denormalizedMessages).length;
+  const optimizationPercentage = (
+    100 -
+    (normalizedLength * 100) / denormalizedLenght
+  ).toFixed(2);
 
-  const denormalizedMessages = denormalized.messages.map((message) => message._doc);
-
+  console.log(
+    "normalizados:",
+    objMessages,
+    "denormalizados:",
+    denormalizedMessages
+  );
   return { denormalizedMessages, optimizationPercentage };
 }
 
 function renderOptimization(optimization) {
-  const optimizationContainer = document.getElementById("optimization-container");
+  const optimizationContainer = document.getElementById(
+    "optimization-container"
+  );
   optimizationContainer.innerHTML += `<b>${optimization}%</b>`;
 }
