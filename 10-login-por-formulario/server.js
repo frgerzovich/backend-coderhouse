@@ -9,6 +9,8 @@ const MessagesApi = require("./src/messagesApi");
 const messagesDB = require("./src/db/database").sqliteConnection;
 const productsDB = require("./src/db/database").mysqlConnection;
 const normalizeMessages = require("./src/util/normalize");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 const app = express();
 const port = 8080;
@@ -24,9 +26,9 @@ const messagesApi = new MessagesApi("chats", {
     lastname: { type: String, required: true },
     age: { type: Number, required: true },
     alias: { type: String, required: true },
-    avatar: { type: String, required: true }
+    avatar: { type: String, required: true },
   },
-  text: { type: String, required: true }
+  text: { type: String, required: true },
 });
 
 //conexion con mongo
@@ -35,7 +37,7 @@ async function mongoConnection() {
   const URL = "mongodb://localhost:27017/websocketsmongo";
   await mongoose.connect(URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   });
   console.log("mongodb connection established");
 }
@@ -49,14 +51,21 @@ app.engine(
     extname: "hbs",
     defaultLayout: "index.hbs",
     layoutsDir: __dirname + "/src/views/layouts",
-    partialsDir: __dirname + "/src/views/partials"
+    partialsDir: __dirname + "/src/views/partials",
   })
 );
-
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 app.use("/", router);

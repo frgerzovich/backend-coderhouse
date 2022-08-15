@@ -161,3 +161,43 @@ function renderOptimization(optimization) {
   );
   optimizationContainer.innerHTML += `<b>${optimization}%</b>`;
 }
+
+//LOGIN LOGIC:
+const loginContainer = document.getElementById("login-container");
+const loginForm = document.getElementById("login-form");
+const loginButton = document.getElementById("login-button");
+const logoutButton = document.getElementById("logout-button");
+
+loginButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  const name = document.getElementById("name").value;
+  loginContainer.innerHTML = ` <h2>Bienvenido ${name}</h2>
+    <form id="login-form" action="/login" method="delete"><button type="submit" id="logout-button">Logout</button></form>`;
+});
+
+logoutButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  let seconds = 2;
+  let countdown = setInterval(() => {
+    loginContainer.innerHTML = `<h2>Hasta luego</h2>`;
+    seconds--;
+    if (seconds === 0) {
+      clearInterval(countdown);
+      loginContainer.innerHTML = `<form id="login-form" action="/login" method="post">
+      <div>
+        <label for="name">Nombre:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Usuario..."
+          required
+        />
+      </div>
+      <div>
+        <button id="login-button" type="submit">Enviar</button>
+      </div>
+    </form>`;
+    }
+  });
+});
