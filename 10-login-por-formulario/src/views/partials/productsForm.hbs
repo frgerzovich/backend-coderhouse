@@ -1,32 +1,24 @@
 <div>
+  <div>
+    <h1>Bienvenido {{this.user}}</h1>
+    <button>
+      <a href="/user/logout">Cerrar sesion</a>
+    </button>
+  </div>
   <h1>Nuevo Producto</h1>
   <div>
     <form id="products-form">
       <div>
         <label for="product-title">Nombre del producto</label>
-        <input
-          type="text"
-          id="product-title"
-          placeholder="Producto..."
-          required
-        />
+        <input type="text" id="product-title" placeholder="Producto..." required />
       </div>
       <div>
         <label for="product-price">Precio del producto</label>
-        <input
-          type="number"
-          id="product-price"
-          placeholder="Precio..."
-          required
-        />
+        <input type="number" id="product-price" placeholder="Precio..." required />
       </div>
       <div>
         <label for="product-description">Descripción del producto</label>
-        <input
-          type="text"
-          id="product-description"
-          placeholder="Descripción..."
-        />
+        <input type="text" id="product-description" placeholder="Descripción..." />
       </div>
       <div>
         <label for="product-image">URL de la imagen</label>
@@ -34,12 +26,7 @@
       </div>
       <div>
         <label for="product-stock">Stock del producto</label>
-        <input
-          type="number"
-          id="product-stock"
-          placeholder="Stock..."
-          required
-        />
+        <input type="number" id="product-stock" placeholder="Stock..." required />
       </div>
       <div>
         <button type="submit">Enviar</button>

@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const productRouter = require("./productRoutes");
 const viewRouter = require("./viewRoutes");
-const loginRouter = require("./loginRoutes");
+const userRouter = require("./userRoutes");
+const authMiddleware = require("../middlewares/auth");
 
-router.use("/api/productos", productRouter);
-router.use("/productos", viewRouter);
-router.use("/login", loginRouter);
+router.use("/api/productos", authMiddleware, productRouter);
+router.use("/productos", authMiddleware, viewRouter);
+router.use("/user", userRouter);
 
 module.exports = router;

@@ -7,6 +7,7 @@ const viewAll = async (req, res) => {
   try {
     const products = await api.getAllProducts();
     res.render("main", {
+      user: req.user,
       products: products,
       listExists: products.length > 0
     });

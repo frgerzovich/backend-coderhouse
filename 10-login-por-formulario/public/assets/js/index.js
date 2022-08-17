@@ -16,7 +16,7 @@ document.getElementById("products-form").addEventListener("submit", (e) => {
     price: price,
     thumbnail: thumbnail,
     stock: stock,
-    description: description,
+    description: description
   };
 
   socket.emit("new-product", newProduct);
@@ -85,8 +85,7 @@ const renderMessages = (objMessages) => {
 };
 
 socket.on("messages", (messages) => {
-  const { denormalizedMessages, optimizationPercentage } =
-    denormalizeMensajes(messages);
+  const { denormalizedMessages, optimizationPercentage } = denormalizeMensajes(messages);
   renderMessages(denormalizedMessages);
   renderOptimization(optimizationPercentage);
 });
@@ -107,10 +106,10 @@ document.getElementById("message-form").addEventListener("submit", (e) => {
       lastname: "apellidoDefault",
       age: 99,
       alias: "aliasDefault",
-      avatar: "avatarDefault",
+      avatar: "avatarDefault"
     },
     text: message,
-    time: time,
+    time: time
   };
 
   console.log("funca", newMessage);
@@ -123,42 +122,24 @@ document.getElementById("message-form").addEventListener("submit", (e) => {
 function denormalizeMensajes(objMessages) {
   const author = new normalizr.schema.Entity("author");
 
-  const message = new normalizr.schema.Entity(
-    "message",
-    { author: author },
-    { idAttribute: "_id" }
-  );
+  const message = new normalizr.schema.Entity("message", { author: author }, { idAttribute: "_id" });
 
   const schemaMessages = new normalizr.schema.Entity("messages", {
-    objMessages: [message],
+    objMessages: [message]
   });
 
-  const denormalizedMessages = normalizr.denormalize(
-    objMessages.result,
-    schemaMessages,
-    objMessages.entities
-  );
+  const denormalizedMessages = normalizr.denormalize(objMessages.result, schemaMessages, objMessages.entities);
 
   const normalizedLength = JSON.stringify(objMessages).length;
   const denormalizedLenght = JSON.stringify(denormalizedMessages).length;
-  const optimizationPercentage = (
-    100 -
-    (normalizedLength * 100) / denormalizedLenght
-  ).toFixed(2);
+  const optimizationPercentage = (100 - (normalizedLength * 100) / denormalizedLenght).toFixed(2);
 
-  console.log(
-    "normalizados:",
-    objMessages,
-    "denormalizados:",
-    denormalizedMessages
-  );
+  console.log("normalizados:", objMessages, "denormalizados:", denormalizedMessages);
   return { denormalizedMessages, optimizationPercentage };
 }
 
 function renderOptimization(optimization) {
-  const optimizationContainer = document.getElementById(
-    "optimization-container"
-  );
+  const optimizationContainer = document.getElementById("optimization-container");
   optimizationContainer.innerHTML += `<b>${optimization}%</b>`;
 }
 
@@ -166,38 +147,38 @@ function renderOptimization(optimization) {
 const loginContainer = document.getElementById("login-container");
 const loginForm = document.getElementById("login-form");
 const loginButton = document.getElementById("login-button");
-const logoutButton = document.getElementById("logout-button");
 
-loginButton.addEventListener("click", (e) => {
+loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
+  e.target.submit();
   const name = document.getElementById("name").value;
   loginContainer.innerHTML = ` <h2>Bienvenido ${name}</h2>
-    <form id="login-form" action="/login" method="delete"><button type="submit" id="logout-button">Logout</button></form>`;
-});
-
-logoutButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  let seconds = 2;
-  let countdown = setInterval(() => {
-    loginContainer.innerHTML = `<h2>Hasta luego</h2>`;
-    seconds--;
-    if (seconds === 0) {
-      clearInterval(countdown);
-      loginContainer.innerHTML = `<form id="login-form" action="/login" method="post">
-      <div>
-        <label for="name">Nombre:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Usuario..."
-          required
-        />
-      </div>
-      <div>
-        <button id="login-button" type="submit">Enviar</button>
-      </div>
-    </form>`;
-    }
+  <form id="login-form" action="/login" method="delete"><button type="submit" id="logout-button">Logout</button></form>`;
+  const logoutButton = document.getElementById("logout-button");
+  logoutButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    let seconds = 2;
+    let countdown = setInterval(() => {
+      loginContainer.innerHTML = `<h2>Hasta luego</h2>`;
+      seconds--;
+      if (seconds === 0) {
+        clearInterval(countdown);
+        loginContainer.innerHTML = `<form id="login-form" action="/login" method="post">
+        <div>
+          <label for="name">Nombre:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Usuario..."
+            required
+          />
+        </div>
+        <div>
+          <button id="login-button" type="submit">Enviar</button>
+        </div>
+      </form>`;
+      }
+    });
   });
 });
