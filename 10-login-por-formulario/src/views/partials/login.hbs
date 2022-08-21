@@ -1,11 +1,28 @@
 <div id="login-container">
   <form id="login-form">
     <div>
-      <label for="name">Nombre:</label>
-      <input type="text" id="user" name="user" placeholder="Usuario..." required />
+      <label for="email">Email:</label>
+      <input
+        type="text"
+        id="email"
+        name="email"
+        placeholder="Email..."
+        required
+      />
+      <label for="password">Contraseña</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Contraseña..."
+        required
+      />
     </div>
     <div>
       <button type="submit">Enviar</button>
     </div>
   </form>
+  <div>
+    <p>No tenés un usuario?</p>
+    <button id="go-to-signup">Registrarse</button>
 </div>

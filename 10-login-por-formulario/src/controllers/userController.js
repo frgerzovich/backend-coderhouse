@@ -1,10 +1,15 @@
+const passport = require("passport");
+
+//login methods
 const postLogin = async (req, res) => {
   try {
     req.session.user = req.body.user;
     const user = req.session.user;
     res.status(200).json(user);
   } catch (error) {
-    res.status(error.statusCode ? error.statusCode : 500).json({ error: error.message });
+    res
+      .status(error.statusCode ? error.statusCode : 500)
+      .json({ error: error.message });
   }
 };
 
@@ -21,7 +26,9 @@ const logOut = async (req, res) => {
     });
     res.status(200).send("Sesión cerrada");
   } catch (error) {
-    res.status(error.statusCode ? error.statusCode : 500).json({ error: error.message });
+    res
+      .status(error.statusCode ? error.statusCode : 500)
+      .json({ error: error.message });
   }
 };
 

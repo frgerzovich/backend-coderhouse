@@ -1,0 +1,10 @@
+<div>
+  <h2> Credenciales Incorrectas</h2>
+  <p>Por favor, intente nuevamente.</p>
+  <button id="go-to-login" onclick="goBack()">Volver a Iniciar Sesión</button>
+</div>
+
+<script>
+  function redirect(page) { location.href = page; } function goBack() {
+  redirect('/login') }
+</script>

@@ -1,0 +1,10 @@
+<div>
+  <h2> Usuario ya existente </h2>
+  <p>Por favor, inicie sesión.</p>
+  <button id="go-to-login" onclick="goBack()">Iniciar Sesión</button>
+</div>
+
+<script>
+  function redirect(page) { location.href = page; } function goBack() {
+  redirect('/login') }
+</script>
