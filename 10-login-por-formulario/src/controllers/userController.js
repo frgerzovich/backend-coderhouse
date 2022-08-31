@@ -1,5 +1,14 @@
 const passport = require("passport");
 
+//signup methods
+const postSignup = (req, res) => {
+  res.render("main");
+};
+
+const getSignup = (req, res) => {
+  res.render("signup", {});
+};
+
 //login methods
 const postLogin = async (req, res) => {
   try {
@@ -32,4 +41,4 @@ const logOut = async (req, res) => {
   }
 };
 
-module.exports = { postLogin, getLogin, logOut };
+module.exports = { postLogin, getLogin, logOut, postSignup };

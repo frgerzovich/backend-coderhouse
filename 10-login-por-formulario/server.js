@@ -15,6 +15,7 @@ const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
+const User = require("./src/schemas/userSchema");
 
 const app = express();
 const port = 8080;
@@ -63,11 +64,12 @@ app.use(
   session({
     secret: "secret",
     resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    saveUninitialized: false,
+    cookie: { httpOnly: false, secure: false },
     store: MongoStore.create({
       mongoUrl: "mongodb://localhost:27017/sessions",
     }),
+    rolling: true,
   })
 );
 app.use(express.json());
@@ -182,7 +184,7 @@ passport.use(
             console.log("error in saving user: " + err);
             return done(err);
           }
-          console.log(user);
+          console.log(newUser);
           console.log("user saved succesfully!");
           return done(null, userWithId);
         });
